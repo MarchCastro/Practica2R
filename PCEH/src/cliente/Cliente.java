@@ -1,21 +1,34 @@
 package cliente;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import servidor.Dato;
 
 public class Cliente extends javax.swing.JFrame {
     
     private static JList<Dato> lista;
+    private static ArrayList<Dato> carrito = new ArrayList<Dato>();
     private static Socket cl;
     private static BufferedReader br;
+    private static Dato s;
+    private static int sel = 0;
     
     private static void cargaDatos(){
         try {
@@ -48,12 +61,33 @@ public class Cliente extends javax.swing.JFrame {
                     if (mouseEvent.getClickCount() == 2) {
                         int index = theList.locationToIndex(mouseEvent.getPoint());
                         if (index >= 0) {
-                            Dato s = (Dato) theList.getModel().getElementAt(index);
+                            s = (Dato) theList.getModel().getElementAt(index);
                             jLabel2.setText(s.getNombre_producto());
                             jLabel5.setText(s.getMarca());
                             jLabel6.setText(s.getDescripcion());
                             jLabel10.setText("" + s.getExistencias());
                             jLabel7.setText("$" + s.getPrecio());
+                            jButton2.setEnabled(false);
+                            jComboBox1.removeAllItems();
+                            for(int i = 0; i <= s.getExistencias(); i++){
+                                jComboBox1.addItem(""+i);
+                            }
+                            jComboBox1.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    try{
+                                        System.out.println(jComboBox1.getSelectedItem().toString());
+                                        if(jComboBox1.getSelectedItem().toString().equals("0")){
+                                            jButton2.setEnabled(false);
+                                            sel = 0;
+                                        }else{
+                                            jButton2.setEnabled(true);
+                                            sel = Integer.parseInt(jComboBox1.getSelectedItem().toString());
+                                        }
+                                    }catch(NullPointerException ex){}
+                                    
+                                }
+                            });
                             jFrame1.setSize(320, 597);
                             jFrame1.setVisible(true);
                         }
@@ -87,6 +121,15 @@ public class Cliente extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
+        jFrame2 = new javax.swing.JFrame();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane(lista);
         jButton1 = new javax.swing.JButton();
@@ -127,9 +170,12 @@ public class Cliente extends javax.swing.JFrame {
 
         jLabel11.setText("Cantidad:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jButton2.setText("Agregar al carrito");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -193,12 +239,120 @@ public class Cliente extends javax.swing.JFrame {
                 .addGap(28, 28, 28))
         );
 
+        jFrame2.setResizable(false);
+
+        jLabel12.setText("Tu carrito de compras:");
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Producto", "Marca", "Cantidad", "P. Unitario", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
+            jTable1.getColumnModel().getColumn(5).setResizable(false);
+        }
+
+        jLabel13.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+
+        jLabel14.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        jLabel14.setText("TOTAL:");
+
+        jButton3.setText("Eliminar producto");
+        jButton3.setEnabled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Confirmar compra");
+        jButton4.setEnabled(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Vaciar carrito");
+        jButton5.setEnabled(false);
+
+        javax.swing.GroupLayout jFrame2Layout = new javax.swing.GroupLayout(jFrame2.getContentPane());
+        jFrame2.getContentPane().setLayout(jFrame2Layout);
+        jFrame2Layout.setHorizontalGroup(
+            jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jFrame2Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jFrame2Layout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jFrame2Layout.createSequentialGroup()
+                            .addComponent(jButton3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jButton4))
+                        .addComponent(jLabel12)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+        jFrame2Layout.setVerticalGroup(
+            jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jFrame2Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(jLabel12)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addGroup(jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4)
+                    .addComponent(jButton3)
+                    .addComponent(jButton5))
+                .addGap(24, 24, 24))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Precaución con el Hámster");
         setResizable(false);
 
         jLabel1.setText("Articulos disponibles:");
 
         jButton1.setText("Ir al carrito");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -228,6 +382,62 @@ public class Cliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Dato auxD = new Dato(s.getId_producto(), s.getNombre_producto(), s.getMarca(), s.getPrecio(), sel, s.getDescripcion(), s.getPath_img());
+        auxD.setExistencias(sel);
+        System.out.println("Existencias totales: " + s.getExistencias() + " | Se pidieron en carrito: " + sel);
+        s.setExistencias(s.getExistencias() - sel);
+        System.out.println("Restan en existencia: " + s.getExistencias());
+        carrito.add(auxD);
+        jLabel10.setText(""+s.getExistencias());
+        jComboBox1.removeAllItems();
+        for(int i = 0; i <= s.getExistencias(); i++){
+            jComboBox1.addItem(""+i);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+    
+    int rowSelected = -1;
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        float total = 0f;
+        for(int i = 0; i < carrito.size(); i++){
+            Dato d = carrito.get(i);
+            Object[] producto = {d.getId_producto() + "", d.getNombre_producto(), d.getMarca(), d.getExistencias() + "", "$" + d.getPrecio(), "$" + (d.getPrecio() * d.getExistencias())};
+            model.addRow(producto);
+            total += d.getPrecio() * d.getExistencias();
+        }
+        jLabel13.setText("$" + total);
+        
+        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent event) {
+                // do some actions here, for example
+                // print first column value from selected row
+                System.out.println(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
+                rowSelected = jTable1.getSelectedRow();
+                System.out.println("Fila seleccionada: " + rowSelected);
+                if(rowSelected != -1){
+                    jButton3.setEnabled(true);
+                }
+            }
+        });
+        if(carrito.size() > 0){
+            jButton4.setEnabled(true);
+            jButton5.setEnabled(true);
+        }
+        jFrame2.setSize(860,308);
+        jFrame2.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     public static void main(String args[]) {
 
         try {
@@ -253,8 +463,6 @@ public class Cliente extends javax.swing.JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
-        
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -265,12 +473,19 @@ public class Cliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private static javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private static javax.swing.JComboBox<String> jComboBox1;
     private static javax.swing.JFrame jFrame1;
+    private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
     private static javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private static javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -280,5 +495,7 @@ public class Cliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
