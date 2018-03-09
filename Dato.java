@@ -9,8 +9,9 @@ public class Dato implements Serializable{
     int existencias;
     String descripcion;
     String path_img;
+    String path_img1;
     
-    public Dato(int i, String n, String m, float p, int e, String d, String path){
+    public Dato(int i, String n, String m, float p, int e, String d, String path, String path2){
         this.id_producto = i;
         this.nombre_producto = n;
         this.marca = m;
@@ -18,6 +19,7 @@ public class Dato implements Serializable{
         this.existencias = e;
         this.descripcion = d;
         this.path_img = path;
+        this.path_img1 = path2;
     }
 
     int setIdProducto(int prod){
@@ -46,6 +48,10 @@ public class Dato implements Serializable{
 
     String setImagenes(String path){
         return this.path_img = path;
+    }
+
+    String setImagenes(String path2){
+        return this.path_img1 = path2;
     }
     
     
@@ -76,5 +82,9 @@ public class Dato implements Serializable{
 
     String getPaths(){
         return this.path_img;
+    }
+
+    String getPath_1(){
+        return this.path_img1;
     }
 }
