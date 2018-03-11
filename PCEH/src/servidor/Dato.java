@@ -1,20 +1,18 @@
 package servidor;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 public class Dato implements Serializable{
+    int id_producto;
+    String nombre_producto;
+    String marca;
+    float precio;
+    int existencias;
+    String descripcion;
+    String path_img;
+    String path_img1;
     
-    private int id_producto;
-    private String nombre_producto;
-    private String marca;
-    private float precio;
-    private int existencias;
-    private String descripcion;
-    private String path_img;
-    
-    
-    public Dato(int i, String n, String m, float p, int e, String d, String path){
+    public Dato(int i, String n, String m, float p, int e, String d, String path, String path2){
         this.id_producto = i;
         this.nombre_producto = n;
         this.marca = m;
@@ -22,103 +20,72 @@ public class Dato implements Serializable{
         this.existencias = e;
         this.descripcion = d;
         this.path_img = path;
+        this.path_img1 = path2;
     }
 
-    /**
-     * @return the id_producto
-     */
-    public int getId_producto() {
-        return id_producto;
+    public int setIdProducto(int prod){
+        return this.id_producto = prod;
+    }
+   
+    public String setNombreProducto(String nombre){
+        return this.nombre_producto = nombre;
     }
 
-    /**
-     * @param id_producto the id_producto to set
-     */
-    public void setId_producto(int id_producto) {
-        this.id_producto = id_producto;
+    public String setMarca(String mar){
+        return this.marca = mar;
     }
 
-    /**
-     * @return the nombre_producto
-     */
-    public String getNombre_producto() {
-        return nombre_producto;
+    public float setPrecio(float pre){
+        return this.precio = pre;
     }
 
-    /**
-     * @param nombre_producto the nombre_producto to set
-     */
-    public void setNombre_producto(String nombre_producto) {
-        this.nombre_producto = nombre_producto;
+    public int setExistencias(int ex){
+        return this.existencias = ex;
     }
 
-    /**
-     * @return the marca
-     */
-    public String getMarca() {
-        return marca;
+    public String setDescripcion(String des){
+        return this.descripcion = des;
     }
 
-    /**
-     * @param marca the marca to set
-     */
-    public void setMarca(String marca) {
-        this.marca = marca;
+    public String setPath_img(String path){
+        return this.path_img = path;
     }
 
-    /**
-     * @return the precio
-     */
-    public float getPrecio() {
-        return precio;
+    public String setPath_img1(String path2){
+        return this.path_img1 = path2;
+    }
+    
+    
+    // GETS
+    public int getIdProducto(){
+        return this.id_producto;
     }
 
-    /**
-     * @param precio the precio to set
-     */
-    public void setPrecio(float precio) {
-        this.precio = precio;
+    public String getNombreProducto(){
+        return this.nombre_producto;
     }
 
-    /**
-     * @return the existencias
-     */
-    public int getExistencias() {
-        return existencias;
+    public String getMarca(){
+        return this.marca;
     }
 
-    /**
-     * @param existencias the existencias to set
-     */
-    public void setExistencias(int existencias) {
-        this.existencias = existencias;
+    public float getPrecio(){
+        return this.precio;
     }
 
-    /**
-     * @return the descripcion
-     */
-    public String getDescripcion() {
-        return descripcion;
+    public int getExistencias(){
+        return this.existencias;
     }
 
-    /**
-     * @param descripcion the descripcion to set
-     */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public String getDescripcion(){
+        return this.descripcion;
     }
 
-    /**
-     * @return the path_img
-     */
-    public String getPath_img() {
-        return path_img;
+    public String getPath_img(){
+        return this.path_img;
     }
 
-    /**
-     * @param path_img the path_img to set
-     */
-    public void setPath_img(String path_img) {
-        this.path_img = path_img;
+    public String getPath_img1(){
+        return this.path_img1;
     }
 }
