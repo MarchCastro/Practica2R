@@ -46,11 +46,11 @@ public class Dato implements Serializable{
         return this.descripcion = des;
     }
 
-    String setImagenes(String path){
+    String setImagen1(String path){
         return this.path_img = path;
     }
 
-    String setImagenes(String path2){
+    String setImagen2(String path2){
         return this.path_img1 = path2;
     }
     

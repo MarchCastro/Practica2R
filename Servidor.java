@@ -30,6 +30,11 @@ public class Servidor{
         lista.add(p3);
         lista.add(p4);
         lista.add(p5);
+        lista.add(p6);
+        lista.add(p7);
+        lista.add(p8);
+        lista.add(p9);
+        lista.add(p10);
 
         Socket cl = s.accept();
         System.out.println("Cliente conectado desde: " + cl.getInetAddress() + ":" + cl.getPort());
@@ -38,12 +43,40 @@ public class Servidor{
             numero.println(lista.size());
             numero.flush();
             System.out.println("\n Tamaño: "+lista.size());
+            //Envia objeto con archivos
             for(int i = 0; i < lista.size(); i++){
                 ObjectOutputStream oos = new ObjectOutputStream(cl.getOutputStream());
                 oos.writeObject(lista.get(i));
                 //System.out.println("\n Envio: "+lista.get(i).getNombre());
                 oos.flush();   
             } 
+
+            //Recibo numero de productos y leo cada uno de los objetos
+            String opc = "";
+            BufferedReader br2 = new BufferedReader(new InputStreamReader(cl.getInputStream()));
+            opc = br2.readLine();
+            System.out.println(" Recibiré: " + opc + " productos");
+            int numero_acv = Integer.parseInt(opc);
+            
+            //Recibo nombre de producto
+            BufferedReader br3 = new BufferedReader(new InputStreamReader(cl.getInputStream()));
+            String nombre = "";
+            nombre = br3.readLine();
+            System.out.println("\n Producto a modificar: " + nombre);
+            ObjectOutputStream oos = null;
+            int j = 0;
+            //Recibo el dato de cliente
+            if(nombre != null){
+                for(int i = 0; i < lista.size(); i++){
+                    if(lista.get(i).getNombre().compareTo(nombre) == 0){
+                        System.out.println("\n Encontre "+lista.get(i).getnombre_producto() + " " + lista.get(i).getexistencias());                     
+                        lista.add(i,d1);
+                        System.out.println("\n Encontre "+lista.get(i).getexistencias();                     
+                    }
+                }
+            }else{
+                System.out.println("\n No recibí nombre :( ");
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
