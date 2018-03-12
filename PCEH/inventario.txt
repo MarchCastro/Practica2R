@@ -1,0 +1,10 @@
+12345#Blusa rayada#Lacoste#199.0#3#Camisa larga en tejido de algodón. Modelo con cuello, botones delante y en los puños.#Imagenes/blusa1.png#Imagenes/blusa2.png
+67891#Camisa estampada de viscosa#Gucci#299.0#4#Camisa de manga larga en tejido suave de viscosa con estampado, cuello y botones delante.#Imagenes/blusa3.png#Imagenes/blusa4.png
+13579#Pantalón estampado de sarga#Adidas#449.0#4#Pantalón de cinco bolsillos en sarga elástica con estampado, cintura estándar y cierre.#Imagenes/pantalon5.png#Imagenes/pantalon6.png
+24680#Zapatillas deportivas#Nike#449.0#21#Zapatillas deportivas con cordones, borde y lengüeta ligeramente acolchados. Forro y plantillas de tela. Suelas de goma.#Imagenes/tenis7.png#Imagenes/tenis8.png
+12457#Zapatos deportivos sin cierre#Adidas#339.0#8#Zapatillas deportivas sin cierre. Forro y plantillas de tela. Suelas de goma.#Imagenes/tenis9.png#Imagenes/tenis10.png
+23456#Camiseta de manga larga#Vans#349.0#3#Jersey en punto fino y suave con mangas largas, puños y bajo en punto de canalé.#Imagenes/hombre1.png#Imagenes/hombre2.png
+10927#Mocasines#Lacoste#499.0#1#Mocasines en ante sintético con cordones decorativos. Forro y plantillas de tela, y suelas de goma.#Imagenes/zapato1.png#Imagenes/zapato2.png
+93847#Slim Jeans#Converse#599.0#5#Vaqueros de cinco bolsillos en denim elástico y lavado. Modelo de talle bajo con cierre de botón y perneras ajustadas.#Imagenes/hombre3.png#Imagenes/hombre4.png
+35943#Botas Chelsea#Michael Kors#799.0#5#Botas Chelsea en ante sintético con costura decorativa alrededor de la suela elástico en los laterales y trabilla detrás.#Imagenes/botas1.png#Imagenes/botas2.png
+20791#Joggers de punto#Adidas#499.0#8#Joggers en punto grueso de mezcla de algodón con cintura elástica y cordón de ajuste.#Imagenes/pants1.png#Imagenes/pants2.png

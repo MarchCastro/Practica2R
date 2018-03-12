@@ -7,9 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.net.*;
 import java.io.*;
 import java.util.LinkedList;
@@ -18,10 +15,10 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import servidor.Dato;
 
 public class Cliente extends javax.swing.JFrame {
@@ -30,6 +27,7 @@ public class Cliente extends javax.swing.JFrame {
     private static LinkedList<Dato> carrito = new LinkedList<Dato>();
     private static Socket cl;
     private static BufferedReader br;
+    private static PrintWriter pw;
     private static Dato s;
     private static int sel = 0;
     private static Dato[] objetosP;
@@ -155,6 +153,7 @@ public class Cliente extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane(lista);
         jButton1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
 
         jFrame1.setResizable(false);
 
@@ -408,24 +407,31 @@ public class Cliente extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton1)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1)))))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(97, 97, 97)
+                .addContainerGap()
+                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(32, 32, 32))
         );
 
         pack();
@@ -480,7 +486,36 @@ public class Cliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        
+        int conf = JOptionPane.showConfirmDialog(null, "¿Estás seguro que deseas realizar la compra?", "Confirmación de compra", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(conf == JOptionPane.YES_OPTION){
+            try {
+                pw = new PrintWriter(new OutputStreamWriter(cl.getOutputStream()));
+                pw.println(carrito.size());
+                pw.flush();
+                for(Dato d: carrito){
+                    String dato = d.getIdProducto() + "," + d.getExistencias();
+                    pw.println(dato);
+                    pw.flush();
+                }
+                System.out.println("Se enviaron al servidor los artículos comprados.");
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                int rowCount = model.getRowCount();
+                //Remove rows one by one from the end of the table
+                for (int i = rowCount - 1; i >= 0; i--) {
+                    model.removeRow(i);
+                }
+                carrito.clear();
+                jButton4.setEnabled(false);
+                jButton5.setEnabled(false);
+                lista.removeAll();
+                setLista();
+                for(int i = 0; i < auxCount.length; i++){
+                    auxCount[i] = 0;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -505,21 +540,24 @@ public class Cliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        int rowCount = model.getRowCount();
-        //Remove rows one by one from the end of the table
-        for (int i = rowCount - 1; i >= 0; i--) {
-            model.removeRow(i);
-        }
-        carrito.clear();
-        jButton4.setEnabled(false);
-        jButton5.setEnabled(false);
-        lista.removeAll();
-        setLista();
-        for(int i = 0; i < auxCount.length; i++){
-            auxCount[i] = 0;
-        }
-        System.out.println("Se vació el carrito y se reestableció la lista");
+        int conf = JOptionPane.showConfirmDialog(null, "¿Estás seguro que deseas vaciar tu carrito de compras?", "Vaciar carrito de compras", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(conf == JOptionPane.YES_OPTION){
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            int rowCount = model.getRowCount();
+            //Remove rows one by one from the end of the table
+            for (int i = rowCount - 1; i >= 0; i--) {
+                model.removeRow(i);
+            }
+            carrito.clear();
+            jButton4.setEnabled(false);
+            jButton5.setEnabled(false);
+            lista.removeAll();
+            setLista();
+            for(int i = 0; i < auxCount.length; i++){
+                auxCount[i] = 0;
+            }
+            System.out.println("Se vació el carrito y se reestableció la lista");
+            }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
@@ -565,6 +603,10 @@ public class Cliente extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Cliente().setVisible(true);
+                ImageIcon fot = new ImageIcon(getClass().getResource("/cliente/Hamster-01.png"));
+                Icon icono = new ImageIcon(fot.getImage().getScaledInstance(353, 104, Image.SCALE_DEFAULT));
+                jLabel6.setIcon(icono);
+                jLabel6.repaint();
             }
         });
     }
@@ -588,6 +630,7 @@ public class Cliente extends javax.swing.JFrame {
     private static javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private static javax.swing.JLabel jLabel5;
+    private static javax.swing.JLabel jLabel6;
     private static javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
